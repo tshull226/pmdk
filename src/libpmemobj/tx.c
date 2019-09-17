@@ -1090,22 +1090,24 @@ pmemobj_tx_add_snapshot(struct tx *tx, struct tx_range_def *snapshot)
 
 /*
  * pmemobj_tx_merge_flags -- (internal) common code for merging flags between
- *				two ranges to ensure resultant behavior is correct
+ * two ranges to ensure resultant behavior is correct
  */
 static void
 pmemobj_tx_merge_flags(struct tx_range_def *dest, struct tx_range_def *merged)
 {
 	/*
-	 * POBJ_XADD_NO_FLUSH should only be set in merged range if set in both ranges
+	 * POBJ_XADD_NO_FLUSH should only be set in merged range if set in
+	 * both ranges
 	 */
-	if((dest->flags & POBJ_XADD_NO_FLUSH) && !(merged->flags & POBJ_XADD_NO_FLUSH)) {
+	if ((dest->flags & POBJ_XADD_NO_FLUSH) &&
+				!(merged->flags & POBJ_XADD_NO_FLUSH)) {
 		dest->flags = dest->flags & (~POBJ_XADD_NO_FLUSH);
 	}
 }
 
 /*
  * pmemobj_tx_add_common -- (internal) common code for adding persistent memory
- *				into the transaction
+ * into the transaction
  */
 static int
 pmemobj_tx_add_common(struct tx *tx, struct tx_range_def *args)
@@ -1672,7 +1674,7 @@ pmemobj_tx_free(PMEMoid oid)
 	if (n != NULL) {
 		VEC_FOREACH_BY_PTR(action, &tx->actions) {
 			if (action->type == POBJ_ACTION_TYPE_HEAP &&
-			    action->heap.offset == oid.off) {
+				action->heap.offset == oid.off) {
 				struct tx_range_def *r = ravl_data(n);
 				void *ptr = OBJ_OFF_TO_PTR(pop, r->offset);
 				VALGRIND_SET_CLEAN(ptr, r->size);
